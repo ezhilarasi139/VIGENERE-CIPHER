@@ -36,81 +36,59 @@ STEP-8: Repeat the above steps to generate the entire cipher text.
 #include <string.h>
 #include <ctype.h>
 
-
-void buildVigenereTable(char table[26][26]) {
-    for (int i = 0; i < 26; i++) {
-        for (int j = 0; j < 26; j++) {
-            table[i][j] = 'A' + (i + j) % 26;
-        }
-    }
-}
-
-
-void extendKey(char *plaintext, char *key, char *extendedKey) {
-    int textLen = strlen(plaintext);
-    int keyLen = strlen(key);
-    int j = 0;
-
-    for (int i = 0; i < textLen; i++) {
-        if (isalpha(plaintext[i])) {
-            extendedKey[i] = key[j % keyLen];
+void vigenere_encrypt(char *msg, char *key, char *enc) {
+    int msgLen = strlen(msg), keyLen = strlen(key);
+    for (int i = 0, j = 0; i < msgLen; i++) {
+        if (isalpha(msg[i])) {
+            enc[i] = ((toupper(msg[i]) - 'A' + toupper(key[j % keyLen]) - 'A') % 26) + 'A';
             j++;
         } else {
-            extendedKey[i] = plaintext[i]; 
+            enc[i] = msg[i];
         }
     }
-    extendedKey[textLen] = '\0';
+    enc[msgLen] = '\0';
 }
 
-
-void encrypt(char *plaintext, char *key, char table[26][26], char *ciphertext) {
-    char extendedKey[1000];
-    int len = strlen(plaintext);
-
-    extendKey(plaintext, key, extendedKey);
-
-    for (int i = 0; i < len; i++) {
-        char p = toupper(plaintext[i]);
-        char k = toupper(extendedKey[i]);
-
-        if (isalpha(p)) {
-            int row = p - 'A';
-            int col = k - 'A';
-            ciphertext[i] = table[row][col];
+void vigenere_decrypt(char *enc, char *key, char *dec) {
+    int encLen = strlen(enc), keyLen = strlen(key);
+    for (int i = 0, j = 0; i < encLen; i++) {
+        if (isalpha(enc[i])) {
+            dec[i] = ((toupper(enc[i]) - 'A' - (toupper(key[j % keyLen]) - 'A') + 26) % 26) + 'A';
+            j++;
         } else {
-            ciphertext[i] = plaintext[i]; 
+            dec[i] = enc[i];
         }
     }
-    ciphertext[len] = '\0';
+    dec[encLen] = '\0';
 }
 
 int main() {
-    char plaintext[1000], keyword[100], ciphertext[1000];
-    char table[26][26];
-
-   
-    printf("Enter the plaintext: ");
-    fgets(plaintext, sizeof(plaintext), stdin);
-    plaintext[strcspn(plaintext, "\n")] = '\0'; // remove newline
-
-    printf("Enter the keyword: ");
-    scanf("%s", keyword);
-
-  
-    buildVigenereTable(table);
-
-  
-    encrypt(plaintext, keyword, table, ciphertext);
-
-    printf("Cipher Text: %s\n", ciphertext);
-
+    char msg[1000], key[100];
+    char enc[1000], dec[1000];
+    
+    printf("Simulation of Vigenere Cipher\n");
+    printf("Enter the message: ");
+    scanf(" %s", msg);
+    printf("Enter the key: ");
+    scanf(" %s", key);
+    
+    vigenere_encrypt(msg, key, enc);
+    printf("Encrypted Message: %s\n", enc);
+    
+    vigenere_decrypt(enc, key, dec);
+    printf("Decrypted Message: %s\n", dec);
+    
     return 0;
 }
 
+  
 
 ```
 ## OUTPUT
-<img width="412" height="177" alt="image" src="https://github.com/user-attachments/assets/1a0a708a-cc11-4cc6-8b4d-6e0852b62126" />
+
+
+<img width="505" height="273" alt="Screenshot 2026-01-28 090711" src="https://github.com/user-attachments/assets/dd736a0b-5bd7-40bc-8265-e8dcc9fefddf" />
+
 
 ## RESULT :
 Thus the implementation of the Vigenere Cipher substitution technique using C program is successfully executed.
