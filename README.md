@@ -1,6 +1,7 @@
 # VIGENERE-CIPHER
 ## EX. NO: 4
- 
+### NAME : EZHILARASI N
+### DATE : 28.01.26
 
 ## IMPLEMETATION OF VIGENERE CIPHER
  
@@ -30,7 +31,86 @@ STEP-8: Repeat the above steps to generate the entire cipher text.
 
 
 ## PROGRAM
+```
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
+
+void buildVigenereTable(char table[26][26]) {
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 26; j++) {
+            table[i][j] = 'A' + (i + j) % 26;
+        }
+    }
+}
+
+
+void extendKey(char *plaintext, char *key, char *extendedKey) {
+    int textLen = strlen(plaintext);
+    int keyLen = strlen(key);
+    int j = 0;
+
+    for (int i = 0; i < textLen; i++) {
+        if (isalpha(plaintext[i])) {
+            extendedKey[i] = key[j % keyLen];
+            j++;
+        } else {
+            extendedKey[i] = plaintext[i]; 
+        }
+    }
+    extendedKey[textLen] = '\0';
+}
+
+
+void encrypt(char *plaintext, char *key, char table[26][26], char *ciphertext) {
+    char extendedKey[1000];
+    int len = strlen(plaintext);
+
+    extendKey(plaintext, key, extendedKey);
+
+    for (int i = 0; i < len; i++) {
+        char p = toupper(plaintext[i]);
+        char k = toupper(extendedKey[i]);
+
+        if (isalpha(p)) {
+            int row = p - 'A';
+            int col = k - 'A';
+            ciphertext[i] = table[row][col];
+        } else {
+            ciphertext[i] = plaintext[i]; 
+        }
+    }
+    ciphertext[len] = '\0';
+}
+
+int main() {
+    char plaintext[1000], keyword[100], ciphertext[1000];
+    char table[26][26];
+
+   
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+    plaintext[strcspn(plaintext, "\n")] = '\0'; // remove newline
+
+    printf("Enter the keyword: ");
+    scanf("%s", keyword);
+
+  
+    buildVigenereTable(table);
+
+  
+    encrypt(plaintext, keyword, table, ciphertext);
+
+    printf("Cipher Text: %s\n", ciphertext);
+
+    return 0;
+}
+
+
+```
 ## OUTPUT
+<img width="412" height="177" alt="image" src="https://github.com/user-attachments/assets/1a0a708a-cc11-4cc6-8b4d-6e0852b62126" />
 
-## RESULT
+## RESULT :
+Thus the implementation of the Vigenere Cipher substitution technique using C program is successfully executed.
